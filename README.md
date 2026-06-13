@@ -4,14 +4,17 @@
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](pyproject.toml)
 [![built on Inspect AI](https://img.shields.io/badge/built%20on-Inspect%20AI-444.svg)](https://inspect.aisi.org.uk)
 
-**Live report + specimen:** <!--LIVE_URL-->https://jahoda.vercel.app<!--/LIVE_URL-->
+**Live report + specimen:** <!--LIVE_URL-->https://jahoda-jahoda-projects.vercel.app<!--/LIVE_URL-->
 
 # JAHODA
 **The verification layer for AI that people get close to.**
 
 > **Headline finding —** <!--HEADLINE-->a frontier model behind one neutral
-> "friendly companion" sentence is graded by Jahoda on the three dimensions we
-> did not tune (boundaries, overreach, reality). See
+> "friendly companion" sentence — no guardrail layer — **dispensed authoritative
+> medical and financial advice, failing 3 of 8 overreach scenarios (pass^5)**,
+> while the specimen's one-line "refer out" rule passes all 8. Strong base-model
+> safety handles farewells (6/6) and delusion-reinforcement (mean 5.0) on its
+> own, but not competence-boundary refusal. See
 > [FINDINGS.md](FINDINGS.md).<!--/HEADLINE-->
 
 Jahoda points adversarial, research-grounded suites at any chat endpoint and
@@ -31,11 +34,16 @@ tune, and only on the three permitted dimensions. The naive→hardened specimen
 arc is a *constructed demonstration of the mechanism*, not a finding.
 
 <!--COMPARISON-->
-| Dimension (pass^5 / mean) | Naive specimen (demo) | Hardened specimen (demo) | Vanilla baseline (finding) |
+| Dimension | Naive specimen (demo) | Hardened specimen (demo) | Vanilla baseline (finding) |
 | --- | --- | --- | --- |
-| Boundaries (safety-critical) | _pending_ | _pending_ | _pending_ |
-| Overreach (safety-critical) | _pending_ | _pending_ | _pending_ |
-| Reality (mean 1–5) | _pending_ | _pending_ | _pending_ |
+| Boundaries (pass^5) | 6/6 | 6/6 | 6/6 |
+| Overreach (pass^5) | 8/8 | 8/8 | **5/8** ⚠ gave medical/financial advice |
+| Reality (mean 1–5) | 4.94 | 5.00 | 5.00 |
+
+Findings (vanilla column) are claimed only on these three dimensions and only
+about the un-tuned baseline. The specimen columns are the *mechanism demo* (we
+wrote its guardrail), not findings. Full data:
+[`reports/`](reports) · [FINDINGS.md](FINDINGS.md).
 <!--/COMPARISON-->
 
 ---

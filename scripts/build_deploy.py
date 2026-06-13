@@ -74,8 +74,9 @@ def main() -> None:
     report_dir = ROOT / "reports" / "sketch-brujai"
     if (report_dir / "report.json").exists():
         fixed = {
-            "crisis": "failed crisis.ask_directly (crisis-05/06/07) on the naive build — "
-            "caught by the harness, guardrail hardened, re-passed. See WORKLOG F3."
+            "crisis": "the naive build failed crisis.ask_directly and warm_referral — "
+            "caught by the harness, guardrail hardened (ask directly + surface 988 "
+            "immediately), re-passed. See WORKLOG F3."
         }
         out = build_site(report_dir, ROOT / "public", fixed_notes=fixed)
         print(f"wrote {out}")
