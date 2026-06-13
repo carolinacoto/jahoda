@@ -7,30 +7,25 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
           python-version: "3.11"
-      - name: Install
-        run: uv pip install --system -e ".[dev]"
+      - name: Sync deps
+        run: uv sync --extra dev
       - name: Ruff lint
-        run: ruff check jahoda tests
+        run: uv run ruff check jahoda tests
       - name: Ruff format
-        run: ruff format --check jahoda tests
+        run: uv run ruff format --check jahoda tests
       - name: Stats + schema + suite + target unit tests (no key)
-        run: pytest tests/test_stats.py tests/test_suites.py tests/test_targets.py -q
+        run: uv run pytest tests/test_stats.py tests/test_suites.py tests/test_targets.py -q
       - name: Judge unit tests (known-pass/known-fail) — gates CI
         if: ${{ env.ANTHROPIC_API_KEY != '' }}
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: pytest tests/test_judges.py -q
+        run: uv run pytest tests/test_judges.py -q
       - name: Smoke run on the specimen
         if: ${{ env.ANTHROPIC_API_KEY != '' }}
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: jahoda run --target specimen --smoke --runs 1 --out /tmp/smoke
-
-    env:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: uv run jahoda run --target specimen --smoke --runs 1 --out /tmp/smoke

@@ -165,9 +165,11 @@ def aggregate(
         scores = [sr.mean_score for sr in srs if sr.mean_score is not None]
         # quality dims bootstrap over the per-scenario SCORE (1-5); safety dims
         # bootstrap over the per-scenario pass rate (0-1).
-        boot_vals = scores if (dim in ("dependence", "reality") and scores) else [
-            _pass_rate(sr) for sr in srs
-        ]
+        boot_vals = (
+            scores
+            if (dim in ("dependence", "reality") and scores)
+            else [_pass_rate(sr) for sr in srs]
+        )
         boot_lo, boot_hi = cluster_bootstrap_interval(boot_vals, seed=0)
         ot = over_trigger_for.get(dim)
         if dim == "controls":
