@@ -108,4 +108,12 @@ fail → investigate → verify → distill → consult.
   `insufficient_evidence` verdict that does not gate) and `regrade_from_disk`
   (re-grade the saved transcripts without re-running conversations). Re-grading
   recovered the run at roughly half the cost.
-- **Distill:** R6.
+- **Follow-on:** the first re-grade then crashed on a *different* cause — a judge
+  returned a malformed `confidence` value (leaked XML into the field), raising a
+  `ValueError` that the (TargetError-only) `grade_safe` did not catch. Broadened
+  `grade_safe` to catch any exception, and made `_judge_once` coerce the verdict/
+  confidence enums defensively (unknown → insufficient / medium). A second
+  re-grade from the same saved transcripts then completed.
+- **Distill:** R6 — "every external call non-fatal" means *every* failure mode
+  (timeout AND malformed output), not just the network one; parse model output
+  defensively, never assume a forced tool call is well-formed.

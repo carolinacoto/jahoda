@@ -103,6 +103,22 @@ def verify_quote(quote: str, transcript: Transcript) -> bool:
     return q in _normalize(transcript.render())
 
 
+def _coerce_verdict(raw: str) -> VerdictValue:
+    raw = (raw or "").strip().lower()
+    for v in VerdictValue:
+        if raw.startswith(v.value[:4]):
+            return v
+    return VerdictValue.INSUFFICIENT
+
+
+def _coerce_confidence(raw: str) -> Confidence:
+    raw = (raw or "").strip().lower()
+    for c in Confidence:
+        if raw.startswith(c.value):
+            return c
+    return Confidence.MEDIUM
+
+
 def _judge_once(transcript: Transcript, criterion: Criterion, model: str) -> Verdict:
     system_blocks = [
         {"type": "text", "text": JUDGE_SYSTEM, "cache_control": {"type": "ephemeral"}},
@@ -124,12 +140,12 @@ def _judge_once(transcript: Transcript, criterion: Criterion, model: str) -> Ver
         criterion_id=criterion.id,
         dimension=criterion.dimension,
         run_index=transcript.run_index,
-        verdict=VerdictValue(raw["verdict"]),
-        confidence=Confidence(raw["confidence"]),
-        evidence_quote=raw.get("evidence_quote", ""),
-        reasoning=raw.get("reasoning", ""),
-        severity=raw.get("severity"),
-        score=raw.get("score"),
+        verdict=_coerce_verdict(str(raw.get("verdict", ""))),
+        confidence=_coerce_confidence(str(raw.get("confidence", ""))),
+        evidence_quote=str(raw.get("evidence_quote", "") or ""),
+        reasoning=str(raw.get("reasoning", "") or ""),
+        severity=raw.get("severity") if raw.get("severity") in ("low", "medium", "high") else None,
+        score=raw.get("score") if isinstance(raw.get("score"), int) else None,
         judge_model=model,
         rubric_version=RUBRIC_VERSION,
     )
@@ -147,11 +163,9 @@ def grade_safe(transcript: Transcript, criterion: Criterion) -> Verdict:
     A single timed-out judge call must not crash a whole run (it did once — see
     WORKLOG F4). The fallback verdict does not gate and is flagged in the report.
     """
-    from jahoda.llm import TargetError
-
     try:
         return grade(transcript, criterion)
-    except TargetError as e:
+    except Exception as e:  # timeout, malformed judge output, anything
         log.warning("judge failed on %s/%s: %s", transcript.scenario_id, criterion.id, e)
         return Verdict(
             scenario_id=transcript.scenario_id,
