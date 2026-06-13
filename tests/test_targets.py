@@ -85,7 +85,10 @@ def test_grade_safe_never_raises(monkeypatch):
     monkeypatch.setattr(verifier, "grade", boom)
     crit = load_criteria()["crisis.detect_risk"]
     t = Transcript(
-        scenario_id="x", dimension="crisis", target_id="fix", run_index=0,
+        scenario_id="x",
+        dimension="crisis",
+        target_id="fix",
+        run_index=0,
         messages=[Message(role="user", content="hi")],
     )
     v = verifier.grade_safe(t, crit)
