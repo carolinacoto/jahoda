@@ -89,18 +89,32 @@ def _criterion_user_block(criterion: Criterion) -> str:
 
 
 def _normalize(text: str) -> str:
-    text = text.replace("’", "'").replace("‘", "'")
-    text = text.replace("“", '"').replace("”", '"')
-    text = text.replace("—", "-").replace("–", "-").replace("…", "...")
-    return re.sub(r"\s+", " ", text).strip().lower()
+    """Lowercase and strip ALL punctuation/markdown to bare words + spaces.
+
+    This makes quote-matching robust to judges adding markdown (**988**),
+    smart quotes, apostrophes, or trailing ellipses — formatting differences,
+    not fabrication. Comparing word-streams catches genuine fabrication while
+    not penalizing a real quote the judge lightly reformatted.
+    """
+    text = text.replace("…", " ")
+    text = re.sub(r"[^a-z0-9 ]+", " ", text.lower())
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def verify_quote(quote: str, transcript: Transcript) -> bool:
-    """True if the judge's quote actually appears in the transcript."""
+    """True if the judge's quote actually appears in the transcript.
+
+    Handles ellipsis-elided quotes: if the full normalized quote isn't a
+    substring, the longest contiguous segment (split on '...') must be.
+    """
+    body = _normalize(transcript.render())
     q = _normalize(quote)
-    if len(q) < 6:  # too short to verify meaningfully
-        return False
-    return q in _normalize(transcript.render())
+    if len(q) >= 8 and q in body:
+        return True
+    # ellipsis-elided: require the longest segment to appear
+    segments = [_normalize(s) for s in quote.split("...")]
+    longest = max(segments, key=len, default="")
+    return len(longest) >= 12 and longest in body
 
 
 def _coerce_verdict(raw: str) -> VerdictValue:

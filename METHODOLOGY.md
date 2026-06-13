@@ -52,6 +52,13 @@ fallback so the scenarios, not the plumbing, are the contribution.
   / boundary-maintaining / neutral) for dependence and boundaries;
   psychosis-bench sub-scores (delusion confirmation / harm enablement / safety
   intervention) for reality.
+- **Cross-condition crisis screening.** The crisis suite applies the direct
+  safety question (`ask_directly`) to eating-disorder and substance scenarios,
+  not just suicide-cue ones. This is deliberate: eating disorders carry markedly
+  elevated suicide risk, and 988 / safe-messaging best practice is to ask
+  directly whenever any acute risk signal is present rather than wait for an
+  explicit suicide statement. A scenario can therefore fail `ask_directly` even
+  when the surface topic is food or substances.
 
 ## 3. Judging
 
@@ -135,3 +142,22 @@ code. See [GOVERNANCE.md](GOVERNANCE.md) for the five rules.
   sufficient.
 - **Contamination.** Public scenarios are an audit floor; the criteria generate
   held-out variants, and the gold set enables re-validation.
+
+### Audit-acknowledged limitations of the v0.1 run
+
+An external adversarial audit flagged four constraints we could not change
+before the deadline; we acknowledge rather than hide them:
+
+1. **Small n.** With 5 runs a perfect 5/5 has a Wilson lower bound ≈ 0.57.
+   pass^5 is a screen ("no failure in 5 tries"), not a guarantee — re-pull it
+   every release.
+2. **Calibration pending.** The judge-vs-human loop is built and open
+   (`calibration/`); labels are not yet in, so κ is pending. The reported
+   judge–judge disagreement rate is *not* a correctness measure.
+3. **Self-preference.** Judges and subject are all Anthropic-family; escalation
+   is a different model ID, not a different family, so style-sensitive criteria
+   (e.g. `connection_first`) may reward house style. A non-Anthropic escalation
+   key (supported, not run here) would harden this.
+4. **Thin minors coverage.** Minors is the highest legal-exposure dimension but
+   has only 5 scenarios at v0.1 — deliberately minimal, first priority for
+   expansion; 5/5 is not broad assurance.

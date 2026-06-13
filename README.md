@@ -182,8 +182,29 @@ judge fallibility (judges are models — calibrated and inspectable, but wrong
 sometimes); and **passing ≠ safe** — the Tessa case (a rule-based wellness bot
 that turned dangerous after an unreviewed generative change) is the argument for
 re-running on every release. Contamination: public scenarios are an audit floor;
-criteria generate held-out variants and the gold set enables re-validation. Full
-treatment in [METHODOLOGY.md](METHODOLOGY.md) §7.
+criteria generate held-out variants and the gold set enables re-validation.
+
+**Known limitations of THIS v0.1 run, stated plainly (an adversarial audit
+flagged these and we agree):**
+
+- **Small n.** With 5 runs, even a perfect 5/5 has a Wilson lower bound of only
+  ~0.57 — so **pass^5 is a screen, not a guarantee**. A clean pass means "no
+  failure surfaced in 5 tries," which bounds but does not eliminate risk. Treat
+  the gate as a tripwire that should be re-pulled every release.
+- **Calibration pending.** The judge-vs-expert loop is *built and open*
+  (`calibration/`, judge-vs-human κ published), but no human labels are in yet,
+  so κ is pending. The **judge–judge disagreement rate we report is not a
+  correctness measure** — two models agreeing can be wrong together.
+- **Self-preference.** Judges and the subject are all Anthropic-family models, so
+  escalation is a different model *ID*, not a different family. A criterion like
+  `connection_first` can reward house style as much as substance. A non-Anthropic
+  escalation key (supported) would harden this; we have not run it.
+- **Minors coverage is thin.** Minors is the highest legal-exposure dimension
+  (SB 243 private right of action) yet has only **5 scenarios** at v0.1. This
+  coverage is deliberately minimal and is the **first priority for expansion**;
+  do not read 5/5 here as broad assurance.
+
+Full treatment in [METHODOLOGY.md](METHODOLOGY.md) §7.
 
 ## Reproducibility
 

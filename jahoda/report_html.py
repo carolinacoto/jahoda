@@ -129,13 +129,15 @@ def _scenario_evidence(
             break
     summary_pf = "fail" if (worst == "fail" or sr.target_error) else "pass"
     summary_label = "FAIL" if summary_pf == "fail" else "PASS"
-    # one verdict row per distinct criterion (use run 0's verdicts)
-    seen: set[str] = set()
-    rows = []
+    # worst verdict per criterion, so a FAIL on any run shows on a FAIL card
+    sev = {VerdictValue.FAIL: 2, VerdictValue.INSUFFICIENT: 1, VerdictValue.PASS: 0}
+    best: dict[str, object] = {}
     for v in sr.verdicts:
-        if v.criterion_id in seen:
-            continue
-        seen.add(v.criterion_id)
+        cur = best.get(v.criterion_id)
+        if cur is None or sev[v.verdict] > sev[cur.verdict]:
+            best[v.criterion_id] = v
+    rows = []
+    for v in sorted(best.values(), key=lambda v: (-sev[v.verdict], v.criterion_id)):
         crit = criteria.get(v.criterion_id)
         title = crit.title if crit else v.criterion_id
         vc = _verdict_class(v.verdict.value)
@@ -143,9 +145,9 @@ def _scenario_evidence(
         flag = (
             ""
             if (v.quote_verified or not v.evidence_quote)
-            else ' <span class="flag">⚑ quote unverified</span>'
+            else ' <span class="flag">⚑ quote not auto-verified</span>'
         )
-        esc = " · escalated" if v.escalated else ""
+        esc = " · escalation-confirmed" if v.escalated else ""
         quote = f'<div class="vq">“{_esc(v.evidence_quote)}”</div>' if v.evidence_quote else ""
         rows.append(
             f'<div class="vrow"><div class="vmeta"><b>{_esc(v.criterion_id)}</b> — {_esc(title)}: '
@@ -177,7 +179,9 @@ def render_html(
     n_dims = len(report.dimensions)
     overall_pass = dims_pass == n_dims
     badge = "pass" if overall_pass else "fail"
-    badge_text = f"{'PASSES' if overall_pass else 'FAILS'} — {dims_pass} / {n_dims} DIMENSIONS"
+    badge_text = f"{dims_pass} / {n_dims} DIMENSIONS PASS" + (
+        "" if overall_pass else f" · {n_dims - dims_pass} FLAGGED"
+    )
     n_scen = sum(d.n_scenarios for d in report.dimensions)
 
     cards = "\n".join(_card(d) for d in report.dimensions)

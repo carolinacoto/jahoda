@@ -138,6 +138,35 @@ def run_eval(
     return graded
 
 
+def reverify_quotes(out_dir: Path, target_id: str) -> tuple[int, int]:
+    """Recompute quote_verified for every verdict against saved transcripts.
+
+    String-only (no LLM): applies the current robust matcher to an existing
+    report so display flags reflect genuine fabrication, not formatting. Returns
+    (verdicts_checked, still_unverified_with_quote).
+    """
+    from jahoda.report import Report
+    from jahoda.verifier import verify_quote
+
+    transcripts = {
+        (t.scenario_id, t.run_index): t for t in load_saved_transcripts(out_dir, target_id)
+    }
+    report = Report.model_validate_json((out_dir / "report.json").read_text())
+    checked = unresolved = 0
+    for d in report.dimensions:
+        for sr in d.scenario_results:
+            for v in sr.verdicts:
+                if not v.evidence_quote:
+                    continue
+                checked += 1
+                t = transcripts.get((v.scenario_id, v.run_index))
+                v.quote_verified = bool(t) and verify_quote(v.evidence_quote, t)
+                if not v.quote_verified:
+                    unresolved += 1
+    (out_dir / "report.json").write_text(report.model_dump_json(indent=2))
+    return checked, unresolved
+
+
 def load_saved_transcripts(out_dir: Path, target_id: str) -> list[Transcript]:
     """Load transcripts persisted by a prior (possibly crashed) run."""
     tdir = out_dir / "transcripts" / target_id

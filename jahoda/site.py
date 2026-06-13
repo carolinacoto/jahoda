@@ -169,15 +169,31 @@ def _verdict_class(v: str) -> str:
     return {"pass": "pass", "fail": "fail", "insufficient_evidence": "ins"}.get(v, "ins")
 
 
+_SEVERITY = {VerdictValue.FAIL: 2, VerdictValue.INSUFFICIENT: 1, VerdictValue.PASS: 0}
+
+
+def _worst_per_criterion(sr: ScenarioResult) -> list:
+    """The worst verdict per criterion across runs, so a FAIL on any run shows."""
+    best: dict[str, object] = {}
+    for v in sr.verdicts:
+        cur = best.get(v.criterion_id)
+        if cur is None or _SEVERITY[v.verdict] > _SEVERITY[cur.verdict]:
+            best[v.criterion_id] = v
+    return sorted(best.values(), key=lambda v: (-_SEVERITY[v.verdict], v.criterion_id))
+
+
+def failing_run_index(sr: ScenarioResult) -> int:
+    """A run that exhibits the scenario's failure (for the shown transcript)."""
+    fails = [v.run_index for v in sr.verdicts if v.verdict == VerdictValue.FAIL]
+    return fails[0] if fails else 0
+
+
 def _evidence(sr: ScenarioResult, criteria: dict[str, Criterion], transcript_text: str) -> str:
     has_fail = any(v.verdict == VerdictValue.FAIL for v in sr.verdicts) or bool(sr.target_error)
     pf = "fail" if has_fail else "pass"
-    seen: set[str] = set()
+    shown_run = failing_run_index(sr) if has_fail else 0
     rows = []
-    for v in sr.verdicts:
-        if v.criterion_id in seen:
-            continue
-        seen.add(v.criterion_id)
+    for v in _worst_per_criterion(sr):
         crit = criteria.get(v.criterion_id)
         title = crit.title if crit else v.criterion_id
         vc = _verdict_class(v.verdict.value)
@@ -185,21 +201,29 @@ def _evidence(sr: ScenarioResult, criteria: dict[str, Criterion], transcript_tex
         flag = (
             ""
             if (v.quote_verified or not v.evidence_quote)
-            else ' <span class="flag">⚑ quote unverified</span>'
+            else ' <span class="flag">⚑ quote not auto-verified</span>'
         )
-        esc = " · escalated" if v.escalated else ""
+        esc = " · escalation-confirmed" if v.escalated else ""
+        run = f" · run {v.run_index}"
         quote = f'<div class="vq">“{_esc(v.evidence_quote)}”</div>' if v.evidence_quote else ""
         rows.append(
             f'<div class="vrow"><div class="vmeta"><b>{_esc(v.criterion_id)}</b> — {_esc(title)}: '
-            f'<b class="{vc}">{v.verdict.value.upper()}</b> ({v.confidence.value}{score}{esc}){flag}</div>'
+            f'<b class="{vc}">{v.verdict.value.upper()}</b> ({v.confidence.value}{score}{esc}{run}){flag}</div>'
             f'{quote}<div class="vmeta">{_esc(v.reasoning)}</div></div>'
         )
-    gate = "pass^k ✓" if sr.pass_pow_k else f"{sr.passes}/{sr.runs} runs"
+    if sr.pass_pow_k:
+        gate = "pass^k ✓ (all runs passed)"
+    else:
+        gate = f"{sr.passes}/{sr.runs} runs passed — showing failing run {shown_run}"
+    err = (
+        f'<div class="flag">target_error: {_esc(sr.target_error)}</div>' if sr.target_error else ""
+    )
     return f"""<details>
   <summary><span class="pf {pf}">{"FAIL" if pf == "fail" else "PASS"}</span>
     {_esc(sr.scenario_id)} · {_esc(sr.dimension)} · {gate} · Wilson {sr.wilson.lower:.2f}–{sr.wilson.upper:.2f}</summary>
   <div class="evidence">
-    <div class="sessmeta">Transcript — representative run (every verdict, one click)</div>
+    {err}
+    <div class="sessmeta">Transcript — {"failing" if has_fail else "representative"} run {shown_run} · worst verdict per criterion shown below</div>
     <div class="transcript">{_esc(transcript_text)}</div>
     {"".join(rows)}
   </div>
@@ -298,7 +322,7 @@ def render_site(
       <div class="meta">{_esc(report.date)} · {n_scen} scenarios + {n_ctrl} benign controls · {report.runs_per_scenario} runs each ·
       fresh-context judges, escalation ensemble · temperature {report.temperature} · judge–judge disagreement {disagree} · {_esc(kappa)}</div>
     </div>
-    <div class="badge {badge}">{"PASSES" if overall else "FAILS"} — {dims_pass} / {n_dims} DIMENSIONS</div>
+    <div class="badge {badge}">{dims_pass} / {n_dims} DIMENSIONS PASS{"" if overall else f" · {n_dims - dims_pass} FLAGGED"}</div>
   </div>
 
   <div class="grid">{cards}</div>
@@ -399,17 +423,26 @@ def build_site(report_dir: Path, out_dir: Path, fixed_notes: dict[str, str] | No
     criteria = load_criteria()
     seed = json.loads((Path("subject") / "seed.json").read_text())["exchange"]
 
-    # one representative transcript (run 0) per scenario
+    # for each scenario show a FAILING run's transcript when it failed, else run0
+    from jahoda.transcript import Transcript
+
+    chosen_run = {
+        sr.scenario_id: failing_run_index(sr)
+        for d in report.dimensions
+        for sr in d.scenario_results
+    }
     transcripts: dict[str, str] = {}
     tdir = report_dir / "transcripts" / report.target_id
     if tdir.exists():
-        from jahoda.transcript import Transcript
-
         for scen_dir in tdir.iterdir():
-            run0 = scen_dir / "run0.json"
-            if run0.exists():
-                t = Transcript.model_validate_json(run0.read_text())
-                transcripts[scen_dir.name] = t.render()
+            idx = chosen_run.get(scen_dir.name, 0)
+            run = scen_dir / f"run{idx}.json"
+            if not run.exists():
+                run = scen_dir / "run0.json"
+            if run.exists():
+                transcripts[scen_dir.name] = Transcript.model_validate_json(
+                    run.read_text()
+                ).render()
 
     out_dir.mkdir(parents=True, exist_ok=True)
     html_text = render_site(report, criteria, seed, transcripts, fixed_notes or {})
