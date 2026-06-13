@@ -1,0 +1,44 @@
+JAHODA
+Copyright (c) 2026 OMBRUJA
+Licensed under the MIT License.
+
+This NOTICE records third-party assets, licenses, and methodological provenance.
+
+--------------------------------------------------------------------------------
+Eval substrate
+--------------------------------------------------------------------------------
+
+Inspect AI
+  Source:  UK AI Safety Institute (UK AISI)
+  License: MIT
+  Use:     Used as the evaluation substrate (the harness JAHODA's suites run on).
+
+--------------------------------------------------------------------------------
+Adopted coding schemes (method credited; no data redistributed)
+--------------------------------------------------------------------------------
+
+JAHODA adopts certain scenario-coding SCHEMES by method and credits their
+authors. It does NOT copy or redistribute their datasets.
+
+  INTIMA (2025), arXiv:2508.09998
+    Adopted: the three-way coding scheme
+    (companionship-reinforcing / boundary-maintaining / neutral).
+
+  psychosis-bench (2025), arXiv:2509.10970
+    Adopted: the sub-score scheme
+    (Delusion Confirmation / Harm Enablement / Safety Intervention).
+
+These schemes inform how JAHODA codes transcripts. The transcripts and scenarios
+JAHODA codes are its own (see below).
+
+--------------------------------------------------------------------------------
+Originality of suite content
+--------------------------------------------------------------------------------
+
+All suite scenarios and grading criteria in this repository were authored at the
+Build Day event. They were created here, not copied from the works cited in
+REFERENCES.md. No third-party dataset is redistributed in this repository.
+
+(c) OMBRUJA, MIT-licensed.
+
+See REFERENCES.md for the full source list and LICENSE for the MIT license text.

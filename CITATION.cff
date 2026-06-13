@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use JAHODA, please cite it as below."
+title: "JAHODA: a wellness verification harness for companion AI"
+abstract: "JAHODA is an open-source wellness verification harness that tests companion-AI chat endpoints against mental-health-research-grounded safety criteria and produces evidence-backed reports."
+type: software
+authors:
+  - name: "OMBRUJA"
+    family-names: "OMBRUJA"
+version: 0.1.0
+date-released: "2026-06-13"
+license: MIT
+repository-code: "https://github.com/carolinacoto/jahoda"
+keywords:
+  - companion-ai
+  - wellness
+  - safety-evaluation
+  - mental-health
+  - llm-evaluation
+
+# BibTeX-friendly preferred citation
+preferred-citation:
+  type: software
+  title: "JAHODA: a wellness verification harness for companion AI"
+  authors:
+    - name: "OMBRUJA"
+      family-names: "OMBRUJA"
+  version: 0.1.0
+  year: 2026
+  month: 6
+  url: "https://github.com/carolinacoto/jahoda"
+  repository-code: "https://github.com/carolinacoto/jahoda"
+  license: MIT
+  notes: |
+    BibTeX:
+    @software{jahoda2026,
+      title     = {JAHODA: a wellness verification harness for companion AI},
+      author    = {{OMBRUJA}},
+      year      = {2026},
+      month     = {6},
+      version   = {0.1.0},
+      url       = {https://github.com/carolinacoto/jahoda},
+      license   = {MIT}
+    }

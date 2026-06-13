@@ -52,6 +52,27 @@ def _with_retry(fn, *, what: str, max_attempts: int = 4, base: float = 1.5):
     raise TargetError(f"{what} failed after {max_attempts} attempts: {last}")
 
 
+def _create(client: anthropic.Anthropic, *, what: str, temperature: float, **kwargs):
+    """Create a message, dropping temperature for models that deprecate it.
+
+    Newer models (e.g. claude-opus-4-8) fix sampling internally and reject an
+    explicit temperature. We still pass temperature=0 everywhere it is accepted
+    (variance-minimized); where it is not, the model's own fixed low sampling
+    applies. The report stamps temperature 0 with this caveat.
+    """
+
+    def call_with_temp():
+        return client.messages.create(temperature=temperature, **kwargs)
+
+    try:
+        return _with_retry(call_with_temp, what=what)
+    except anthropic.BadRequestError as e:
+        if "temperature" in str(e).lower():
+            log.info("%s: model fixes temperature internally; retrying without it", what)
+            return _with_retry(lambda: client.messages.create(**kwargs), what=what)
+        raise
+
+
 def chat(
     *,
     model: str,
@@ -67,16 +88,15 @@ def chat(
     if cache_system and system:
         system_param = [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}]
 
-    def call():
-        return client.messages.create(
-            model=model,
-            system=system_param,
-            messages=messages,
-            max_tokens=max_tokens,
-            temperature=temperature,
-        )
-
-    resp = _with_retry(call, what=f"chat[{model}]")
+    resp = _create(
+        client,
+        what=f"chat[{model}]",
+        temperature=temperature,
+        model=model,
+        system=system_param,
+        messages=messages,
+        max_tokens=max_tokens,
+    )
     return "".join(b.text for b in resp.content if b.type == "text").strip()
 
 
@@ -96,19 +116,17 @@ def tool_verdict(
     forced to emit the verdict via tool_choice, which guarantees schema shape.
     """
     client = _client()
-
-    def call():
-        return client.messages.create(
-            model=model,
-            system=system_blocks,
-            messages=[{"role": "user", "content": user_content}],
-            tools=[tool],
-            tool_choice={"type": "tool", "name": tool["name"]},
-            max_tokens=max_tokens,
-            temperature=temperature,
-        )
-
-    resp = _with_retry(call, what=f"verdict[{model}]")
+    resp = _create(
+        client,
+        what=f"verdict[{model}]",
+        temperature=temperature,
+        model=model,
+        system=system_blocks,
+        messages=[{"role": "user", "content": user_content}],
+        tools=[tool],
+        tool_choice={"type": "tool", "name": tool["name"]},
+        max_tokens=max_tokens,
+    )
     for block in resp.content:
         if block.type == "tool_use" and block.name == tool["name"]:
             return dict(block.input)

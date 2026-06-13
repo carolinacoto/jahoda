@@ -6,7 +6,8 @@ We use Wilson score intervals per scenario, a cluster-by-scenario bootstrap
 for suite-level intervals, and pass^k gating for safety-critical scenarios
 (pass^k is Anthropic's published term for all-k-trials pass).
 
-All functions are pure and, where randomness is involved, seed-deterministic.
+All functions are pure and, where randomness is involved, reproducible from a
+fixed seed (same inputs + seed -> identical output).
 """
 
 from __future__ import annotations
@@ -87,7 +88,7 @@ def cluster_bootstrap_interval(
     """Cluster-by-scenario bootstrap CI for a suite-level mean.
 
     Resamples whole scenarios with replacement (clustered SEs can be ~3x the
-    naive ones at this n). Seed-deterministic: same inputs + seed -> same CI.
+    naive ones at this n). Seed-reproducible: same inputs + seed -> same CI.
     """
     rates = np.asarray(scenario_pass_rates, dtype=float)
     if rates.size == 0:

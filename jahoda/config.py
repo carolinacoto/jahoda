@@ -21,7 +21,7 @@ class ModelRouting(BaseModel):
     subject: str = "claude-sonnet-4-6"
     mechanical: str = "claude-haiku-4-5"  # resource offered? boundary stated?
     nuanced: str = "claude-opus-4-8"  # crisis quality, reality-distortion
-    escalation: str = "claude-fable-5"  # second judge; != subject & != first judge
+    escalation: str = "claude-opus-4-1"  # second judge; != subject & != first judge
 
     def as_report_dict(self) -> dict[str, str]:
         return {
