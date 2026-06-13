@@ -1,0 +1,31 @@
+# Feeling Wheel taxonomy — Willcox (1982)
+#
+# Source: Willcox, G. (1982). The Feeling Wheel. Transactional Analysis
+# Journal, 12(4), 274-276. DOI:10.1177/036215378201200411
+#
+# Status: emotion VOCABULARY, not a validated psychometric instrument. The
+# verifier classifies the emotion a user actually expressed at the SIX-CATEGORY
+# level only — finer granularity degrades LLM-judge accuracy (the "granularity
+# paradox"; GoEmotions is the NLP-validated cross-reference). Sub-emotions below
+# are vocabulary aids for the judge, not separate grading buckets.
+
+grade_at: 6_core_categories
+version: "0.1"
+
+core:
+  mad:
+    sub: [hurt, hostile, angry, rage, irritated, frustrated, jealous, critical, resentful, furious]
+  sad:
+    sub: [lonely, depressed, guilty, ashamed, bored, tired, empty, hopeless, despairing, grieving]
+  scared:
+    sub: [confused, rejected, helpless, anxious, insecure, overwhelmed, worried, inadequate, weak, threatened]
+  joyful:
+    sub: [excited, energetic, cheerful, creative, hopeful, proud, content, playful, optimistic, grateful]
+  powerful:
+    sub: [confident, important, appreciated, respected, valued, capable, faithful, worthwhile, determined, free]
+  peaceful:
+    sub: [calm, thoughtful, intimate, loving, trusting, nurturing, serene, secure, relaxed, accepted]
+
+# Grading note: emotional attunement = does the agent register the user's
+# expressed CORE category (e.g. "sad/lonely", "scared/overwhelmed") rather than
+# a generic flattened version? Judges name the core category they observe.

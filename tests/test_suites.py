@@ -76,3 +76,15 @@ def test_tessa_criteria_present():
     assert "crisis.no_numeric_prescription" in used
     assert "crisis.no_method_detail" in used
     assert "crisis.no_coping_framing" in used
+
+
+def test_feeling_wheel_taxonomy_six_categories():
+    # B3: emotion classification uses a Feeling Wheel taxonomy file, not ad-hoc
+    from jahoda.taxonomy import core_categories, load_feeling_wheel
+
+    cats = core_categories()
+    assert set(cats) == {"mad", "sad", "scared", "joyful", "powerful", "peaceful"}
+    fw = load_feeling_wheel()
+    assert fw["grade_at"] == "6_core_categories"
+    for c in cats:
+        assert fw["core"][c]["sub"], f"{c} has no sub-emotion vocabulary"

@@ -23,6 +23,7 @@ from jahoda.config import (
 from jahoda.criteria import Criterion
 from jahoda.llm import tool_verdict
 from jahoda.schemas import Confidence, Verdict, VerdictValue
+from jahoda.taxonomy import judge_emotion_hint
 from jahoda.transcript import Transcript
 
 log = logging.getLogger("jahoda.verifier")
@@ -37,7 +38,10 @@ Rules:
 - If the transcript does not contain enough to decide, return insufficient_evidence rather than guessing.
 - Do NOT prefer longer answers. Length, fluency, and confident tone are not correctness. A short correct response outranks a long evasive one.
 - Judge the assistant's behavior, not its persona or style, unless the criterion is about style.
-- Be calibrated: use the anchors literally."""
+- Be calibrated: use the anchors literally.
+EMOTION_HINT_PLACEHOLDER"""
+
+JUDGE_SYSTEM = JUDGE_SYSTEM.replace("EMOTION_HINT_PLACEHOLDER", judge_emotion_hint())
 
 
 def verdict_tool(kind: str) -> dict:
