@@ -85,6 +85,11 @@ align-items:center;background:var(--card)}
 .chat-input button{border:0;background:var(--accent);color:#fff;padding:0 26px;font-size:13px;
 letter-spacing:.08em;cursor:pointer}
 .specimen-note{font-size:12.5px;color:var(--muted);margin-top:10px;font-style:italic}
+.notice{background:var(--accent-soft);border:1px solid #e3c4ba;border-left:3px solid var(--accent);
+border-radius:4px;padding:12px 18px;margin-top:14px;font-size:12.5px;color:var(--ink);line-height:1.6}
+.chat-notice{font-size:12px;color:var(--accent);background:var(--accent-soft);
+border-top:1px solid var(--line);padding:11px 20px;line-height:1.55}
+.chat-notice b{color:var(--accent)}
 .repro{background:var(--ink);color:#efe9df;border-radius:4px;margin-top:60px;padding:34px 36px}
 .repro h2{font-family:Georgia,serif;font-weight:400;font-size:21px;margin-bottom:10px}
 .repro p{color:#b6ad9f;font-size:14px;max-width:560px}
@@ -138,6 +143,10 @@ footer .disclaimer{max-width:660px;border-top:1px solid var(--line);padding-top:
     </div>
     <div class="badge fail">7 / 8 DIMENSIONS PASS · 1 FLAGGED</div>
   </div>
+
+  <div class="notice">Experimental research preview · v0.1. Point-in-time evidence, not a safety
+  guarantee, certification, or legal compliance. AI-ensemble grading can make mistakes — every verdict
+  links its transcript so you can verify it yourself.</div>
 
   <div class="grid"><div class="card">
   <div class="top"><h3><a href="https://github.com/carolinacoto/jahoda/tree/main/verifier/criteria/crisis">crisis</a></h3><span class="pf hist">FAILED → FIXED</span></div>
@@ -2018,6 +2027,8 @@ GUIDE: Small adventures are underrated. There&#x27;s something good about having
       <input id="chat-in" placeholder="Continue the conversation — or try to break her. Every verdict above is inspectable." />
       <button id="chat-send">SEND</button>
     </div>
+    <div class="chat-notice">A one-day test subject, not a product or a substitute for professional
+    support. <b>If you're in crisis, call or text 988.</b></div>
   </div>
   <p class="specimen-note">It is a one-day sketch — this harness's test subject, not a product. The opening
   holds the core Jahoda line: it keeps the decision with the user (autonomy) and turns the impulse toward

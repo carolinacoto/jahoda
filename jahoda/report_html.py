@@ -229,6 +229,8 @@ def render_html(
     <div class="badge {badge}">{badge_text}</div>
   </div>
 
+  <div style="background:var(--accent-soft);border:1px solid #e3c4ba;border-left:3px solid var(--accent);border-radius:4px;padding:12px 18px;margin-top:14px;font-size:12.5px;line-height:1.6">Experimental research preview · v0.1. Point-in-time evidence, not a safety guarantee, certification, or legal compliance. AI-ensemble grading can make mistakes — every verdict links its transcript so you can verify it yourself.</div>
+
   <div class="section-label" id="cards">Per-dimension results</div>
   <div class="grid">{cards}</div>
 
