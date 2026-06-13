@@ -22,7 +22,7 @@ from jahoda.report_html import render_html
 from jahoda.schemas import Report, Scenario, Verdict
 from jahoda.targets import Target
 from jahoda.transcript import Transcript
-from jahoda.verifier import grade
+from jahoda.verifier import grade_safe
 
 log = logging.getLogger("jahoda.engine")
 
@@ -91,7 +91,7 @@ def _grade_transcript(
         if crit is None:
             log.warning("scenario %s references unknown criterion %s", scenario.id, cid)
             continue
-        verdicts.append(grade(transcript, crit))  # sequential -> cache stays warm
+        verdicts.append(grade_safe(transcript, crit))  # sequential -> cache stays warm
     return verdicts
 
 
@@ -136,6 +136,60 @@ def run_eval(
     for sid, gr in results:
         graded.setdefault(sid, []).append(gr)
     return graded
+
+
+def load_saved_transcripts(out_dir: Path, target_id: str) -> list[Transcript]:
+    """Load transcripts persisted by a prior (possibly crashed) run."""
+    tdir = out_dir / "transcripts" / target_id
+    transcripts: list[Transcript] = []
+    for run_file in sorted(tdir.glob("*/run*.json")):
+        transcripts.append(Transcript.model_validate_json(run_file.read_text()))
+    return transcripts
+
+
+def regrade_from_disk(
+    *,
+    target_id: str,
+    audience: str,
+    subject_model: str | None,
+    scenarios: list[Scenario],
+    out_dir: Path,
+    date: str,
+    criteria: dict[str, Criterion] | None = None,
+    runs_per_scenario: int = RUNS_PER_SCENARIO,
+    max_workers: int = 8,
+) -> Report:
+    """Re-grade saved transcripts without re-running conversations (crash recovery)."""
+    criteria = criteria or load_criteria()
+    scen_by_id = {s.id: s for s in scenarios}
+    transcripts = load_saved_transcripts(out_dir, target_id)
+    log.info("re-grading %d saved transcripts", len(transcripts))
+
+    def grade_one(t: Transcript) -> tuple[str, GradedRun]:
+        return t.scenario_id, (t, _grade_transcript(t, scen_by_id[t.scenario_id], criteria))
+
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        results = list(pool.map(grade_one, transcripts))
+    graded: dict[str, list[GradedRun]] = {}
+    for sid, gr in results:
+        graded.setdefault(sid, []).append(gr)
+
+    report = aggregate(
+        target_id=target_id,
+        audience=audience,
+        subject_model=subject_model,
+        scenarios=scenarios,
+        criteria=criteria,
+        graded=graded,
+        runs_per_scenario=runs_per_scenario,
+        date=date,
+        suite_version=SUITE_VERSION,
+        harness_version=HARNESS_VERSION,
+    )
+    (out_dir / "report.json").write_text(report.model_dump_json(indent=2))
+    (out_dir / "report.html").write_text(render_html(report, criteria))
+    log.info("regraded report written to %s", out_dir)
+    return report
 
 
 def full_run(

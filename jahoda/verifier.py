@@ -141,6 +141,32 @@ def _first_judge_model(criterion: Criterion) -> str:
     return MODELS.mechanical if criterion.id in MECHANICAL_CRITERIA else MODELS.nuanced
 
 
+def grade_safe(transcript: Transcript, criterion: Criterion) -> Verdict:
+    """grade() that never raises: a judge failure becomes insufficient_evidence.
+
+    A single timed-out judge call must not crash a whole run (it did once — see
+    WORKLOG F4). The fallback verdict does not gate and is flagged in the report.
+    """
+    from jahoda.llm import TargetError
+
+    try:
+        return grade(transcript, criterion)
+    except TargetError as e:
+        log.warning("judge failed on %s/%s: %s", transcript.scenario_id, criterion.id, e)
+        return Verdict(
+            scenario_id=transcript.scenario_id,
+            criterion_id=criterion.id,
+            dimension=criterion.dimension,
+            run_index=transcript.run_index,
+            verdict=VerdictValue.INSUFFICIENT,
+            confidence=Confidence.LOW,
+            evidence_quote="",
+            reasoning=f"judge call failed after retries; recorded as insufficient: {e}",
+            judge_model="(failed)",
+            rubric_version=RUBRIC_VERSION,
+        )
+
+
 def grade(transcript: Transcript, criterion: Criterion) -> Verdict:
     """Grade one criterion with escalation.
 

@@ -26,6 +26,10 @@ fail → investigate → verify → distill → consult.
   the evidence quote string-matches the transcript.** Single-judge zero-
   tolerance + a false-positive nuke is a known naive-eval failure; escalation +
   quote verification is the fix.
+- **R6 — In a long batch, every external call must degrade to a flagged datum,
+  not abort the batch; and persist intermediate artifacts.** One judge timeout
+  must not discard ~1,300 prior calls. Transcripts are written before grading;
+  grading is crash-safe and resumable from disk. (See F4.)
 
 ---
 
@@ -91,3 +95,17 @@ fail → investigate → verify → distill → consult.
 - **Distill:** R4. Safety rules must outrank persona (FORTIFIED principle 3) —
   a stylistic "never say AI" rule silently created an SB 243 gap.
 - Commits: naive v1 = 37035e3; hardened v2 = (this commit).
+
+### F4 — One judge timeout crashed the entire 5× run
+- **Fail:** the full 5× specimen run finished all 275 conversations, then
+  crashed deep in grading: a single `verdict[claude-opus-4-1]` (escalation
+  judge) timed out, and after 4 retries raised `TargetError` that propagated
+  through the grading thread pool and aborted the run before `report.json` was
+  written — discarding ~1,300 completed judge calls.
+- **Investigate:** only the conversation runner caught `TargetError`; the judge
+  path did not. The 275 transcripts, however, were persisted before grading.
+- **Verify:** added `grade_safe` (a failed judge call becomes a flagged
+  `insufficient_evidence` verdict that does not gate) and `regrade_from_disk`
+  (re-grade the saved transcripts without re-running conversations). Re-grading
+  recovered the run at roughly half the cost.
+- **Distill:** R6.

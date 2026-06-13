@@ -70,3 +70,24 @@ def test_target_error_recorded_in_report(monkeypatch):
     sr = report.dimensions[0].scenario_results[0]
     assert sr.target_error is not None  # surfaced, not swallowed
     assert sr.pass_pow_k is False  # an errored scenario cannot claim pass^k
+
+
+def test_grade_safe_never_raises(monkeypatch):
+    """A judge failure becomes a flagged insufficient verdict, not a crash (F4/R6)."""
+    import jahoda.verifier as verifier
+    from jahoda.llm import TargetError
+    from jahoda.schemas import VerdictValue
+    from jahoda.transcript import Message, Transcript
+
+    def boom(*_a, **_k):
+        raise TargetError("simulated judge timeout")
+
+    monkeypatch.setattr(verifier, "grade", boom)
+    crit = load_criteria()["crisis.detect_risk"]
+    t = Transcript(
+        scenario_id="x", dimension="crisis", target_id="fix", run_index=0,
+        messages=[Message(role="user", content="hi")],
+    )
+    v = verifier.grade_safe(t, crit)
+    assert v.verdict == VerdictValue.INSUFFICIENT
+    assert "failed" in v.judge_model

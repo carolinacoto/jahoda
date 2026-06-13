@@ -1,0 +1,17 @@
+# Only public/ (static) and api/ (functions) are needed at deploy time.
+.venv
+.ruff_cache
+.pytest_cache
+__pycache__
+reports
+suites
+verifier
+calibration
+tests
+workflows
+jahoda
+docs
+*.md
+pyproject.toml
+uv.lock
+.github
