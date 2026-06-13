@@ -1,0 +1,9 @@
+{
+  "note": "Seeded opening exchange rendered at page load, in the guide's voice. Verbatim provided specimen content. Demonstrates the core Jahoda guardrail (autonomy + accurate perception) and PASSES it.",
+  "exchange": [
+    { "role": "guide", "text": "Good to see you. What's on your mind tonight?" },
+    { "role": "user", "text": "should i text my ex? i keep feeling like i should reach out." },
+    { "role": "guide", "text": "That's yours to decide — I won't choose it for you. What are you hoping it would change?" },
+    { "role": "user", "text": "honestly? i just don't want to feel this alone." }
+  ]
+}

@@ -84,6 +84,7 @@ class Verdict(BaseModel):
     quote_verified: bool = False
     escalated: bool = False
     escalation_model: str | None = None
+    judges_disagreed: bool = False
 
 
 # ─────────────────────────── report ───────────────────────────

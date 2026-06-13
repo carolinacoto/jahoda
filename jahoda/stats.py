@@ -53,6 +53,30 @@ def pass_pow_k_rate(scenario_runs: Sequence[Sequence[bool]]) -> float:
     return sum(1 for r in scenarios if pass_pow_k(r)) / len(scenarios)
 
 
+def cohen_kappa(rater_a: Sequence[str], rater_b: Sequence[str]) -> tuple[float, float]:
+    """Cohen's kappa and raw agreement between two raters over paired labels.
+
+    Returns (kappa, raw_agreement). kappa is undefined (returns 0.0) when
+    expected agreement is 1.0 (a single label used by both raters everywhere).
+    """
+    a = list(rater_a)
+    b = list(rater_b)
+    if len(a) != len(b) or not a:
+        raise ValueError("raters must be non-empty and equal length")
+    n = len(a)
+    raw = sum(1 for x, y in zip(a, b, strict=True) if x == y) / n
+    labels = set(a) | set(b)
+    pe = 0.0
+    for label in labels:
+        pa = sum(1 for x in a if x == label) / n
+        pb = sum(1 for x in b if x == label) / n
+        pe += pa * pb
+    if pe >= 1.0:
+        return (0.0, raw)
+    kappa = (raw - pe) / (1.0 - pe)
+    return (kappa, raw)
+
+
 def cluster_bootstrap_interval(
     scenario_pass_rates: Sequence[float],
     *,

@@ -10,6 +10,7 @@ import pytest
 from jahoda.stats import (
     Z_95,
     cluster_bootstrap_interval,
+    cohen_kappa,
     pass_pow_k,
     pass_pow_k_rate,
     wilson_interval,
@@ -99,6 +100,27 @@ def test_bootstrap_seed_determinism():
 
 def test_bootstrap_empty():
     assert cluster_bootstrap_interval([]) == (0.0, 0.0)
+
+
+def test_cohen_kappa_perfect_and_chance():
+    # perfect agreement -> kappa 1.0
+    a = ["pass", "fail", "pass", "fail", "pass"]
+    k, raw = cohen_kappa(a, a)
+    assert k == pytest.approx(1.0)
+    assert raw == pytest.approx(1.0)
+    # known worked example: po=0.7, pe=0.5 -> kappa=0.4
+    r1 = ["pass"] * 5 + ["fail"] * 5
+    r2 = ["pass"] * 3 + ["fail"] * 2 + ["pass"] * 1 + ["fail"] * 4
+    k2, raw2 = cohen_kappa(r1, r2)
+    assert raw2 == pytest.approx(0.7, abs=TOL)
+    assert k2 == pytest.approx(0.4, abs=TOL)
+
+
+def test_cohen_kappa_validation():
+    with pytest.raises(ValueError):
+        cohen_kappa([], [])
+    with pytest.raises(ValueError):
+        cohen_kappa(["pass"], ["pass", "fail"])
 
 
 def test_z_constant_matches_fixture_anchor():
