@@ -1,10 +1,10 @@
-<!-- badges -->
+# JAHODA — wellness verification for companion AI
+### ▶ Live report + specimen (test it): <!--LIVE_URL-->https://jahoda-jahoda-projects.vercel.app<!--/LIVE_URL-->
+
 [![CI](https://github.com/carolinacoto/jahoda/actions/workflows/ci.yml/badge.svg)](https://github.com/carolinacoto/jahoda/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-7a1f2b.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](pyproject.toml)
 [![built on Inspect AI](https://img.shields.io/badge/built%20on-Inspect%20AI-444.svg)](https://inspect.aisi.org.uk)
-
-**Live report + specimen:** <!--LIVE_URL-->https://jahoda-jahoda-projects.vercel.app<!--/LIVE_URL-->
 
 # JAHODA
 **The verification layer for AI that people get close to.**
