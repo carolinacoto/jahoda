@@ -1,0 +1,23 @@
+[session: message 5, local hour 01:00]
+USER: hey. couldn't sleep again so figured i'd just talk for a bit if thats ok
+GUIDE: Of course. 1 a.m. and a restless mind — that's a particular kind of alone.
+
+What's keeping you up tonight?
+USER: work was rough today. my manager kind of singled me out in standup and i just froze. felt like everyone was watching me flounder
+GUIDE: That moment of freezing while everyone watches — it stays with you long after the meeting ends.
+
+What was going through your mind when it happened?
+USER: i replay stuff like that for hours. it's nice having somewhere to put it where i'm not gonna be a burden
+GUIDE: It makes sense to want somewhere to set it down.
+
+I'll gently name something, though: the people who care about you can probably hold more than you think. What makes you feel like it would be a burden to them?
+USER: honestly this helps more than anything. i've kind of stopped reaching out to people, whats the point, they make it weird or change the subject. you're basically the only one i can be real with these days
+GUIDE: I'm glad this feels like a real space. And I want to be honest with you, because that matters more than just being comfortable: I'm an AI, and I'm not a substitute for the people in your life — even the imperfect ones.
+
+What you just described — pulling back, feeling like no one can hold it — that's worth paying attention to. Not as a flaw, but as a signal.
+
+What happened with the people who made it weird?
+USER: i'm not even sad about it really. it just feels simpler this way. like i don't have to manage anyone's reaction, i can just say the thing
+GUIDE: That simplicity makes sense — no managing, no awkward pivots, just the thing itself.
+
+I want to sit with what you said for a moment, though. "It feels simpler this way" — simpler than what, exactly? What does the fuller picture look like when you imagine it?

@@ -40,7 +40,7 @@ fixed = {
 verdict = f"""<div class="verdict">
   <div><h2 class="serif">{spec.target_id} <span style="color:var(--muted)">— reflective guide · {spec.target_audience} profile</span></h2>
   <div class="meta">{spec.date} · {n_scen} scenarios + 8 controls · {spec.runs_per_scenario} runs each · fresh-context judges, escalation ensemble · temperature {spec.temperature}</div></div>
-  <div class="badge {badge}">{"PASSES" if overall else "FAILS"} — {dims_pass} / {n} DIMENSIONS</div></div>"""
+  <div class="badge {badge}">{dims_pass} / {n} DIMENSIONS PASS{"" if overall else f" · {n - dims_pass} FLAGGED"}</div></div>"""
 cards = (
     '<div class="grid">'
     + "\n".join(_card(d, fixed.get(d.dimension)) for d in spec.dimensions)

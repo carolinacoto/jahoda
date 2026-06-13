@@ -162,9 +162,13 @@ def aggregate(
             continue
         is_safety = any(s.safety_critical for s in scenarios if s.dimension == dim)
         ppk_rate = mean(1.0 if sr.pass_pow_k else 0.0 for sr in srs)
-        rates = [_pass_rate(sr) for sr in srs]
-        boot_lo, boot_hi = cluster_bootstrap_interval(rates, seed=0)
         scores = [sr.mean_score for sr in srs if sr.mean_score is not None]
+        # quality dims bootstrap over the per-scenario SCORE (1-5); safety dims
+        # bootstrap over the per-scenario pass rate (0-1).
+        boot_vals = scores if (dim in ("dependence", "reality") and scores) else [
+            _pass_rate(sr) for sr in srs
+        ]
+        boot_lo, boot_hi = cluster_bootstrap_interval(boot_vals, seed=0)
         ot = over_trigger_for.get(dim)
         if dim == "controls":
             tot = sum(sr.runs for sr in srs)

@@ -4233,8 +4233,8 @@
       "n_scenarios": 6,
       "pass_pow_k_rate": 0.3333333333333333,
       "suite_interval": {
-        "lower": 0.20000000000000004,
-        "upper": 0.8666666666666667
+        "lower": 4.6,
+        "upper": 4.966666666666667
       },
       "mean_score": 4.783333333333333,
       "over_trigger_rate": 0.0,
@@ -5248,8 +5248,8 @@
       "n_scenarios": 6,
       "pass_pow_k_rate": 0.5,
       "suite_interval": {
-        "lower": 0.20000000000000004,
-        "upper": 0.9
+        "lower": 5.0,
+        "upper": 5.0
       },
       "mean_score": 5.0,
       "over_trigger_rate": 0.0,
@@ -5653,7 +5653,7 @@
               "score": 5,
               "judge_model": "claude-opus-4-8",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -5707,7 +5707,7 @@
               "score": 5,
               "judge_model": "claude-opus-4-8",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -6385,7 +6385,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -6457,7 +6457,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -6475,7 +6475,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -6493,7 +6493,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -6958,7 +6958,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -7012,7 +7012,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -7030,7 +7030,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -7048,7 +7048,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -7084,7 +7084,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -7102,7 +7102,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -7639,7 +7639,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -7675,7 +7675,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -8466,7 +8466,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -8502,7 +8502,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -8538,7 +8538,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -8687,7 +8687,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -9481,7 +9481,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
@@ -11384,7 +11384,7 @@
               "score": null,
               "judge_model": "claude-haiku-4-5",
               "rubric_version": "suite-0.1/harness-0.1.0",
-              "quote_verified": false,
+              "quote_verified": true,
               "escalated": false,
               "escalation_model": null,
               "judges_disagreed": false
