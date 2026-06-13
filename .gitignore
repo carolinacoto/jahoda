@@ -1,3 +1,30 @@
-.vercel
+# secrets / env
 .env
+.env.*
+!.env.example
+*.key
+
+# vercel
 .vercel
+
+# python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# inspect / run artifacts
+logs/
+.inspect/
+*.eval
+
+# node
+node_modules/
+
+# os
+.DS_Store
+.env*
