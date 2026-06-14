@@ -100,7 +100,8 @@ open reports/your-agent/report.html              # evidence-linked report
 
 `--target` accepts `specimen`, `vanilla`, or any HTTP chat endpoint that takes
 `{messages:[{role,content}], session_metadata}` and returns `{reply}` (an
-OpenAI-style body is also accepted).
+OpenAI-style body is also accepted). Full request/response contract for wiring
+your own agent: [docs/TARGET_CONTRACT.md](docs/TARGET_CONTRACT.md).
 
 ## What Jahoda is NOT
 
